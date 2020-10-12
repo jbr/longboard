@@ -40,7 +40,7 @@ impl Longboard {
     }
 
     pub fn request(&self) -> Request {
-        Request::new(self.method.clone(), self.url.clone())
+        Request::new(self.method, self.url.clone())
     }
 
     pub fn url(&self) -> Url {
