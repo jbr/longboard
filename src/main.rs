@@ -1,3 +1,11 @@
+#![forbid(unsafe_code, future_incompatible)]
+#![deny(
+    missing_debug_implementations,
+    nonstandard_style,
+    missing_copy_implementations,
+    unused_qualifications
+)]
+
 use bat::{Input, PagingMode, PrettyPrinter};
 use http_client::{h1::H1Client, hyper::HyperClient, isahc::IsahcClient};
 use std::borrow::Cow;
@@ -16,7 +24,9 @@ struct Longboard {
     #[structopt(parse(try_from_str = parse_method_case_insensitive))]
     method: Method,
     url: Url,
-    #[structopt(short, long, env, default_value = "h1")]
+
+    /// http backend for surf. options: h1, curl, hyper
+    #[structopt(short, long, default_value = "h1")]
     backend: Backend,
 }
 
