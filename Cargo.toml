@@ -1,0 +1,31 @@
+[package]
+name = "longboard"
+version = "0.1.0"
+authors = ["Jacob Rothstein <hi@jbr.me>"]
+edition = "2018"
+
+[dependencies]
+surf = "2.0.0"
+structopt = "0.3.19"
+
+[dependencies.bat]
+version = "0.16.0"
+default-features = false
+features = [
+  "atty",
+  "clap",
+  "dirs",
+  "lazy_static",
+  "paging",
+  "wild",
+  "regex-onig",
+]
+
+[dependencies.async-std]
+version = "1.6.5"
+features = ["tokio02", "attributes"]
+
+[dependencies.http-client]
+version = "6.1.0"
+default-features = false
+features = ["h1_client", "hyper_client", "curl_client"]
