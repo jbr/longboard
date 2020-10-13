@@ -30,13 +30,13 @@ $ longboard get https://async.rs
 ## Installation
 
 ```sh
-$ cargo install longboard --version 0.0.2-alpha.3
+$ cargo install longboard --version 0.0.2-alpha.4
 ```
 
 ## Usage
 
 ```sh
-longboard 0.0.2-alpha.3
+longboard 0.0.2-alpha.4
 the easy way to surf
 
 USAGE:
@@ -55,6 +55,17 @@ OPTIONS:
 ARGS:
     <method>
     <url>
+```
+
+Examples to try:
+```
+$ longboard get http://httpin.org/get
+$ longboard get https://httpbin.org/headers -h Some-Header="header value" User-Agent=longboard
+$ longboard post https://httpbin.org/post -b "this is a request body"
+$ longboard post http://httpbin.org/anything -b "a=b&c=d" -h content-type=application/x-www-form-urlencoded
+$ longboard put https://httpbin.org/put -f ./Cargo.toml -h content-type=application/toml
+$ longboard patch https://httpbin.org/patch < ./some-file
+$ cat /dev/random | head -c1000 | base64 | longboard post https://httpbin.org/anything 
 ```
 
 ## Safety

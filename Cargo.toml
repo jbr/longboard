@@ -12,6 +12,7 @@ repository = "https://github.com/jbr/longboard"
 [dependencies]
 surf = "2.0.0"
 structopt = "0.3.20"
+atty = "0.2.14"
 
 [dependencies.bat]
 version = "0.16.0"

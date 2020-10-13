@@ -70,15 +70,18 @@ impl Longboard {
             request.body_file(path).await?;
         } else if let Some(body) = &self.body {
             request.body_string(body.to_owned());
-        } else if self.client == Backend::H1 {
-            let mut buffer = String::new();
-            async_std::io::stdin().read_to_string(&mut buffer).await?;
-            request.body_string(buffer);
-        } else {
-            request.set_body(Body::from_reader(
-                BufReader::new(async_std::io::stdin()),
-                None,
-            ));
+        } else if atty::isnt(atty::Stream::Stdin) {
+            if self.client == Backend::H1 {
+                // h1 can't stream
+                let mut buffer = String::new();
+                async_std::io::stdin().read_to_string(&mut buffer).await?;
+                request.body_string(buffer);
+            } else {
+                request.set_body(Body::from_reader(
+                    BufReader::new(async_std::io::stdin()),
+                    None,
+                ));
+            }
         }
 
         Ok(request)

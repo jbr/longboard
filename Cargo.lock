@@ -1393,6 +1393,7 @@ name = "longboard"
 version = "0.0.2-alpha.3"
 dependencies = [
  "async-std",
+ "atty",
  "bat",
  "http-client",
  "structopt",
