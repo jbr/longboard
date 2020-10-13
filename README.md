@@ -6,13 +6,13 @@ $ longboard get https://async.rs
 
 
 ## TODO for this to be useful
-- [ ] request bodies
-  - [ ] from filesystem
-  - [ ] as a cli arg
-  - [ ] from stdin (pipe)
-- [ ] request headers
+- [x] request bodies
+  - [x] from filesystem
+  - [x] as a cli arg
+  - [x] from stdin (pipe)
+- [x] request headers
 - [ ] opt into / out of displaying different parts of request and response
-- [ ] http status -> exit code
+- [ ] http status -> exit codepp
 
 
 
@@ -30,25 +30,27 @@ $ longboard get https://async.rs
 ## Installation
 
 ```sh
-$ cargo install longboard --version 0.0.2-alpha.2
+$ cargo install longboard --version 0.0.2-alpha.3
 ```
 
 ## Usage
 
 ```sh
-longboard 0.0.2-alpha.2
+longboard 0.0.2-alpha.3
 the easy way to surf
 
 USAGE:
     longboard [OPTIONS] <method> <url>
 
 FLAGS:
-    -h, --help       Prints help information
+        --help       Prints help information
     -V, --version    Prints version information
 
 OPTIONS:
-    -b, --backend <backend>    http backend for surf. options: h1, curl, hyper
-                               [default: h1]
+    -b, --body <body>             provide a request body on the command line
+    -c, --client <client>         http backend for surf. options: h1, curl, hyper [default: h1]
+    -f, --file <file>             provide a the path to a file to use as the request body
+    -h, --headers <headers>...    provide headers in the form -h KEY1=VALUE1 KEY2=VALUE2
 
 ARGS:
     <method>
