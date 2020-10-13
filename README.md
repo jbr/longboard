@@ -14,6 +14,11 @@ $ longboard get https://async.rs
 - [ ] opt into / out of displaying different parts of request and response
 - [ ] http status -> exit codepp
 
+Some future ideas:
+- sessions/stored cookie jars
+- interactive repl mode for an easy way to make consecutive requests with the same client
+- sse mode that pretty-prints sse messages
+- render images to ascii for fun?
 
 
 <!-- * [CI ![CI][ci-badge]][ci] -->
