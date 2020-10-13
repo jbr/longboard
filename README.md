@@ -14,23 +14,11 @@ $ longboard get https://async.rs
 - [ ] opt into / out of displaying different parts of request and response
 - [ ] http status -> exit codepp
 
-Some future ideas:
+## Some future ideas:
 - sessions/stored cookie jars
 - interactive repl mode for an easy way to make consecutive requests with the same client
 - sse mode that pretty-prints sse messages
 - render images to ascii for fun?
-
-
-<!-- * [CI ![CI][ci-badge]][ci] -->
-* [Releases][releases] [![crates.io version][version-badge]][lib-rs]
-* [Contributing][contributing]
-
-<!-- [ci]: https://github.com/jbr/longboard/actions?query=workflow%3ACI -->
-<!-- [ci-badge]: https://github.com/jbr/longboard/workflows/CI/badge.svg -->
-[releases]: https://github.com/jbr/longboard/releases
-[contributing]: https://github.com/jbr/longboard/blob/master/.github/CONTRIBUTING.md
-[lib-rs]: https://lib.rs/longboard
-[version-badge]: https://img.shields.io/crates/v/longboard.svg?style=flat-square
 
 ## Installation
 
@@ -72,6 +60,17 @@ $ longboard put https://httpbin.org/put -f ./Cargo.toml -h content-type=applicat
 $ longboard patch https://httpbin.org/patch < ./some-file
 $ cat /dev/random | head -c1000 | base64 | longboard post https://httpbin.org/anything 
 ```
+
+<!-- * [CI ![CI][ci-badge]][ci] -->
+* [Releases][releases] [![crates.io version][version-badge]][lib-rs]
+* [Contributing][contributing]
+
+<!-- [ci]: https://github.com/jbr/longboard/actions?query=workflow%3ACI -->
+<!-- [ci-badge]: https://github.com/jbr/longboard/workflows/CI/badge.svg -->
+[releases]: https://github.com/jbr/longboard/releases
+[contributing]: https://github.com/jbr/longboard/blob/master/.github/CONTRIBUTING.md
+[lib-rs]: https://lib.rs/longboard
+[version-badge]: https://img.shields.io/crates/v/longboard.svg?style=flat-square
 
 ## Safety
 This crate uses ``#![forbid(unsafe_code)]`` to ensure everything is implemented in
