@@ -126,43 +126,48 @@ async fn main() -> Result<()> {
     let longboard = Longboard::from_args();
     let url = longboard.url();
     let mut response = longboard.send().await?;
-    let body = response.body_string().await?;
-    let http_res: &http::Response = response.as_ref();
-    let headers: &Headers = http_res.as_ref();
-    let headers_as_string = format!("{:#?}", headers);
-    let content_type = response.content_type().map(|c| c.to_string());
-    let filename = match content_type.as_deref() {
-        Some("application/json") => "body.json", // bat can't sniff json for some reason
-        _ => url.path(),
-    };
 
-    let response_status = format!(
-        "{}: {}",
-        response.status(),
-        response.status().canonical_reason()
-    );
+    if atty::is(atty::Stream::Stdout) {
+        let body = response.body_string().await?;
+        let http_res: &http::Response = response.as_ref();
+        let headers: &Headers = http_res.as_ref();
+        let headers_as_string = format!("{:#?}", headers);
+        let content_type = response.content_type().map(|c| c.to_string());
+        let filename = match content_type.as_deref() {
+            Some("application/json") => "body.json", // bat can't sniff json for some reason
+            _ => url.path(),
+        };
 
-    PrettyPrinter::new()
-        .paging_mode(PagingMode::QuitIfOneScreen)
-        .header(true)
-        .grid(true)
-        .inputs(vec![
-            Input::from_bytes(headers_as_string.as_bytes())
-                .name("headers.rs")
-                .title("response headers"),
-            Input::from_bytes(response_status.as_bytes())
-                .name("status")
-                .title("status"),
-            Input::from_bytes(body.as_bytes()).name(filename).title(
-                if let Some(content_type) = content_type {
-                    Cow::Owned(format!("response body ({})", content_type))
-                } else {
-                    Cow::Borrowed("response body")
-                },
-            ),
-        ])
-        .print()
-        .unwrap();
+        let response_status = format!(
+            "{}: {}",
+            response.status(),
+            response.status().canonical_reason()
+        );
+
+        PrettyPrinter::new()
+            .paging_mode(PagingMode::QuitIfOneScreen)
+            .header(true)
+            .grid(true)
+            .inputs(vec![
+                Input::from_bytes(headers_as_string.as_bytes())
+                    .name("headers.rs")
+                    .title("response headers"),
+                Input::from_bytes(response_status.as_bytes())
+                    .name("status")
+                    .title("status"),
+                Input::from_bytes(body.as_bytes()).name(filename).title(
+                    if let Some(content_type) = content_type {
+                        Cow::Owned(format!("response body ({})", content_type))
+                    } else {
+                        Cow::Borrowed("response body")
+                    },
+                ),
+            ])
+            .print()
+            .unwrap();
+    } else {
+        async_std::io::copy(response, async_std::io::stdout()).await?;
+    }
 
     Ok(())
 }
