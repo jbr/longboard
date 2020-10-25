@@ -6,6 +6,7 @@
     unused_qualifications
 )]
 
+use async_std::io;
 use async_std::io::BufReader;
 use async_std::prelude::*;
 use bat::{Input, PagingMode, PrettyPrinter};
@@ -17,6 +18,7 @@ use structopt::StructOpt;
 use surf::http::{self, Headers, Method, Url};
 use surf::Body;
 use surf::{Client, Error, Request, Response, Result};
+use surf_cookie_middleware::CookieMiddleware;
 
 fn parse_header(s: &str) -> Result<(String, String)> {
     let pos = s
@@ -32,31 +34,65 @@ struct Longboard {
     method: Method,
     url: Url,
 
-    /// provide a the path to a file to use as the request body
+    /// provide a file system path to a file to use as the request body
+    ///
+    /// alternatively, you can use an operating system pipe to pass a file in
+    ///
+    /// three equivalent examples:
+    /// longboard post http://httpbin.org/anything -f ./body.json
+    /// longboard post http://httpbin.org/anything < ./body.json
+    /// cat ./body.json | longboard post http://httpbin.org/anything
     #[structopt(short, long, parse(from_os_str))]
     file: Option<PathBuf>,
 
     /// provide a request body on the command line
+    ///
+    /// example:
+    /// longboard post http://httpbin.org/post -b '{"hello": "world"}'
     #[structopt(short, long)]
     body: Option<String>,
 
     /// provide headers in the form -h KEY1=VALUE1 KEY2=VALUE2
+    ///
+    /// example:
+    /// longboard get http://httpbin.org/headers -h Accept=application/json Authorization="Basic u:p"
     #[structopt(short, long, parse(try_from_str = parse_header))]
     headers: Vec<(String, String)>,
 
     /// http backend for surf. options: h1, curl, hyper
+    ///
+    /// caveat: h1 currently does not support chunked request bodies,
+    /// so do not use that backend yet if you need to stream bodies
     #[structopt(short, long, default_value = "h1")]
     client: Backend,
+
+    /// a filesystem path to a cookie jar in ndjson format
+    ///
+    /// note: this currently only persists "persistent cookies," which
+    /// either have a max-age or expires.
+    ///
+    /// if the file does not yet exist, it will be created
+    ///
+    /// example:
+    /// longboard get "https://httpbin.org/response-headers?Set-Cookie=USER_ID=10;+Max-Age=100" -j ~/.longboard.ndjson
+    #[structopt(short, long, parse(from_os_str))]
+    jar: Option<PathBuf>,
 }
 
 impl Longboard {
-    pub fn client(&self) -> Client {
+    pub async fn client(&self) -> Result<Client> {
         use Backend::*;
-        match self.client {
+        let mut client = match self.client {
             H1 => Client::with_http_client(H1Client::new()),
             Curl => Client::with_http_client(IsahcClient::new()),
             Hyper => Client::with_http_client(HyperClient::new()),
+        };
+
+        if let Some(ref cookie_path) = self.jar {
+            client = client.with(CookieMiddleware::from_path(cookie_path).await?);
         }
+
+        Ok(client)
     }
 
     pub async fn request(&self) -> Result<Request> {
@@ -74,13 +110,10 @@ impl Longboard {
             if self.client == Backend::H1 {
                 // h1 can't stream
                 let mut buffer = String::new();
-                async_std::io::stdin().read_to_string(&mut buffer).await?;
+                io::stdin().read_to_string(&mut buffer).await?;
                 request.body_string(buffer);
             } else {
-                request.set_body(Body::from_reader(
-                    BufReader::new(async_std::io::stdin()),
-                    None,
-                ));
+                request.set_body(Body::from_reader(BufReader::new(io::stdin()), None));
             }
         }
 
@@ -93,7 +126,8 @@ impl Longboard {
 
     pub async fn send(&self) -> Result<Response> {
         let request = self.request().await?;
-        self.client().send(request).await
+        let client = self.client().await?;
+        client.send(request).await
     }
 }
 
@@ -108,7 +142,7 @@ impl FromStr for Backend {
     type Err = Error;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        match s {
+        match &*s.to_ascii_lowercase() {
             "h1" | "async-h1" => Ok(Self::H1),
             "curl" | "isahc" => Ok(Self::Curl),
             "hyper" => Ok(Self::Hyper),
@@ -166,7 +200,7 @@ async fn main() -> Result<()> {
             .print()
             .unwrap();
     } else {
-        async_std::io::copy(response, async_std::io::stdout()).await?;
+        io::copy(response, io::stdout()).await?;
     }
 
     Ok(())
