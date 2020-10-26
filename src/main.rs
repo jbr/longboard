@@ -10,6 +10,7 @@ use async_std::io;
 use async_std::io::BufReader;
 use async_std::prelude::*;
 use bat::{Input, PagingMode, PrettyPrinter};
+use http_client::HttpClient;
 use http_client::{h1::H1Client, hyper::HyperClient, isahc::IsahcClient};
 use std::borrow::Cow;
 use std::path::PathBuf;
@@ -85,13 +86,17 @@ struct Longboard {
 }
 
 impl Longboard {
+    pub fn http_client(&self) -> Box<dyn HttpClient> {
+        match self.client {
+            Backend::H1 => Box::new(H1Client::new()),
+            Backend::Curl => Box::new(IsahcClient::new()),
+            Backend::Hyper => Box::new(HyperClient::new()),
+        }
+    }
+
     pub async fn client(&self) -> Result<Client> {
-        use Backend::*;
-        let mut client = match self.client {
-            H1 => Client::with_http_client(H1Client::new()),
-            Curl => Client::with_http_client(IsahcClient::new()),
-            Hyper => Client::with_http_client(HyperClient::new()),
-        };
+        let http_client = self.http_client();
+        let mut client = Client::with_http_client(http_client);
 
         if let Some(ref cookie_path) = self.jar {
             client = client.with(CookieMiddleware::from_path(cookie_path).await?);
