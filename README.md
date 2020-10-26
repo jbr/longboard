@@ -7,27 +7,62 @@ $ longboard get https://async.rs
 ## Installation
 
 ```sh
-$ cargo install longboard --version 0.0.2-alpha.4
+$ cargo install longboard
 ```
 
 ## Usage
 
 ```sh
-longboard 0.0.2-alpha.4
+longboard 0.0.2
 the easy way to surf
 
 USAGE:
     longboard [OPTIONS] <method> <url>
 
 FLAGS:
-        --help       Prints help information
-    -V, --version    Prints version information
+        --help
+            Prints help information
+
+    -V, --version
+            Prints version information
+
 
 OPTIONS:
-    -b, --body <body>             provide a request body on the command line
-    -c, --client <client>         http backend for surf. options: h1, curl, hyper [default: h1]
-    -f, --file <file>             provide a the path to a file to use as the request body
-    -h, --headers <headers>...    provide headers in the form -h KEY1=VALUE1 KEY2=VALUE2
+    -b, --body <body>
+            provide a request body on the command line
+
+            example:
+            longboard post http://httpbin.org/post -b '{"hello": "world"}'
+    -c, --client <client>
+            http backend for surf. options: h1, curl, hyper
+
+            caveat: h1 currently does not support chunked request bodies,
+            so do not use that backend yet if you need to stream bodies [default: h1]
+    -f, --file <file>
+            provide a file system path to a file to use as the request body
+
+            alternatively, you can use an operating system pipe to pass a file in
+
+            three equivalent examples:
+
+            longboard post http://httpbin.org/anything -f ./body.json
+            longboard post http://httpbin.org/anything < ./body.json
+            cat ./body.json | longboard post http://httpbin.org/anything
+    -h, --headers <headers>...
+            provide headers in the form -h KEY1=VALUE1 KEY2=VALUE2
+
+            example:
+            longboard get http://httpbin.org/headers -h Accept=application/json Authorization="Basic u:p"
+    -j, --jar <jar>
+            a filesystem path to a cookie jar in ndjson format
+
+            note: this currently only persists "persistent cookies," which
+            either have a max-age or expires.
+
+            if the file does not yet exist, it will be created
+
+            example:
+            longboard get "https://httpbin.org/response-headers?Set-Cookie=USER_ID=10;+Max-Age=100" -j ~/.longboard.ndjson
 
 ARGS:
     <method>
@@ -42,7 +77,8 @@ $ longboard post https://httpbin.org/post -b "this is a request body"
 $ longboard post http://httpbin.org/anything -b "a=b&c=d" -h content-type=application/x-www-form-urlencoded
 $ longboard put https://httpbin.org/put -f ./Cargo.toml -h content-type=application/toml
 $ longboard patch https://httpbin.org/patch < ./some-file
-$ cat /dev/random | head -c1000 | base64 | longboard post https://httpbin.org/anything 
+$ cat /dev/random | head -c1000 | base64 | longboard post https://httpbin.org/anything
+$ longboard get https://httpbin.org/stream | cat
 ```
 
 ## TODO for this to be useful
@@ -56,7 +92,7 @@ $ cat /dev/random | head -c1000 | base64 | longboard post https://httpbin.org/an
 - [ ] http status -> exit code
 
 ## Some future ideas:
-- sessions/stored cookie jars
+- [x] sessions/stored cookie jars
 - interactive repl mode for an easy way to make consecutive requests with the same client
 - sse mode that pretty-prints sse messages
 - render images to ascii for fun?
