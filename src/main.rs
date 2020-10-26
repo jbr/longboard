@@ -28,7 +28,11 @@ fn parse_header(s: &str) -> Result<(String, String)> {
 }
 
 #[derive(StructOpt, Debug)]
-#[structopt(name = "longboard", about = "the easy way to surf")]
+#[structopt(
+    name = "longboard",
+    about = "the easy way to surf",
+    verbatim_doc_comment
+)]
 struct Longboard {
     #[structopt(parse(try_from_str = parse_method_case_insensitive))]
     method: Method,
@@ -39,31 +43,32 @@ struct Longboard {
     /// alternatively, you can use an operating system pipe to pass a file in
     ///
     /// three equivalent examples:
+    ///
     /// longboard post http://httpbin.org/anything -f ./body.json
     /// longboard post http://httpbin.org/anything < ./body.json
     /// cat ./body.json | longboard post http://httpbin.org/anything
-    #[structopt(short, long, parse(from_os_str))]
+    #[structopt(short, long, parse(from_os_str), verbatim_doc_comment)]
     file: Option<PathBuf>,
 
     /// provide a request body on the command line
     ///
     /// example:
     /// longboard post http://httpbin.org/post -b '{"hello": "world"}'
-    #[structopt(short, long)]
+    #[structopt(short, long, verbatim_doc_comment)]
     body: Option<String>,
 
     /// provide headers in the form -h KEY1=VALUE1 KEY2=VALUE2
     ///
     /// example:
     /// longboard get http://httpbin.org/headers -h Accept=application/json Authorization="Basic u:p"
-    #[structopt(short, long, parse(try_from_str = parse_header))]
+    #[structopt(short, long, parse(try_from_str = parse_header), verbatim_doc_comment)]
     headers: Vec<(String, String)>,
 
     /// http backend for surf. options: h1, curl, hyper
     ///
     /// caveat: h1 currently does not support chunked request bodies,
     /// so do not use that backend yet if you need to stream bodies
-    #[structopt(short, long, default_value = "h1")]
+    #[structopt(short, long, default_value = "h1", verbatim_doc_comment)]
     client: Backend,
 
     /// a filesystem path to a cookie jar in ndjson format
@@ -75,7 +80,7 @@ struct Longboard {
     ///
     /// example:
     /// longboard get "https://httpbin.org/response-headers?Set-Cookie=USER_ID=10;+Max-Age=100" -j ~/.longboard.ndjson
-    #[structopt(short, long, parse(from_os_str))]
+    #[structopt(short, long, parse(from_os_str), verbatim_doc_comment)]
     jar: Option<PathBuf>,
 }
 
