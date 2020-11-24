@@ -16,7 +16,7 @@ atty = "0.2.14"
 surf-cookie-middleware = "0.2.0"
 
 [dependencies.bat]
-version = "0.16.0"
+version = "0.17.0"
 default-features = false
 features = [
   "atty",
