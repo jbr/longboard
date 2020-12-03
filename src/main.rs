@@ -86,17 +86,13 @@ struct Longboard {
 }
 
 impl Longboard {
-    pub fn http_client(&self) -> Box<dyn HttpClient> {
-        match self.client {
-            Backend::H1 => Box::new(H1Client::new()),
-            Backend::Curl => Box::new(IsahcClient::new()),
-            Backend::Hyper => Box::new(HyperClient::new()),
-        }
-    }
-
     pub async fn client(&self) -> Result<Client> {
-        let http_client = self.http_client();
-        let mut client = Client::with_http_client(http_client);
+        use Backend::*;
+        let mut client = match self.client {
+            H1 => Client::with_http_client(H1Client::new()),
+            Curl => Client::with_http_client(IsahcClient::new()),
+            Hyper => Client::with_http_client(HyperClient::new()),
+        };
 
         if let Some(ref cookie_path) = self.jar {
             client = client.with(CookieMiddleware::from_path(cookie_path).await?);
@@ -117,14 +113,7 @@ impl Longboard {
         } else if let Some(body) = &self.body {
             request.body_string(body.to_owned());
         } else if atty::isnt(atty::Stream::Stdin) {
-            if self.client == Backend::H1 {
-                // h1 can't stream
-                let mut buffer = String::new();
-                io::stdin().read_to_string(&mut buffer).await?;
-                request.body_string(buffer);
-            } else {
-                request.set_body(Body::from_reader(BufReader::new(io::stdin()), None));
-            }
+            request.set_body(Body::from_reader(BufReader::new(io::stdin()), None));
         }
 
         Ok(request)
@@ -167,8 +156,10 @@ fn parse_method_case_insensitive(src: &str) -> Result<Method> {
 
 #[async_std::main]
 async fn main() -> Result<()> {
+    env_logger::init();
     let longboard = Longboard::from_args();
     let url = longboard.url();
+
     let mut response = longboard.send().await?;
 
     if atty::is(atty::Stream::Stdout) {

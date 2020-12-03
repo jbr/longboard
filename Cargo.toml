@@ -11,12 +11,13 @@ repository = "https://github.com/jbr/longboard"
 
 [dependencies]
 surf = "2.1.0"
-structopt = "0.3.20"
+structopt = "0.3.21"
 atty = "0.2.14"
 surf-cookie-middleware = "0.2.0"
+env_logger = "0.8.2"
 
 [dependencies.bat]
-version = "0.16.0"
+version = "0.17.1"
 default-features = false
 features = [
   "atty",
@@ -29,7 +30,7 @@ features = [
 ]
 
 [dependencies.async-std]
-version = "1.8.0"
+version = "1.7.0"
 features = ["tokio02", "attributes"]
 
 [dependencies.http-client]
