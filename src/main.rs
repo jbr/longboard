@@ -8,9 +8,7 @@
 
 use async_std::io;
 use async_std::io::BufReader;
-use async_std::prelude::*;
 use bat::{Input, PagingMode, PrettyPrinter};
-use http_client::HttpClient;
 use http_client::{h1::H1Client, hyper::HyperClient, isahc::IsahcClient};
 use std::borrow::Cow;
 use std::path::PathBuf;
@@ -201,7 +199,7 @@ async fn main() -> Result<()> {
             .print()
             .unwrap();
     } else {
-        io::copy(response, io::stdout()).await?;
+        io::copy(&mut response, &mut io::stdout()).await?;
     }
 
     Ok(())
