@@ -14,7 +14,7 @@ surf = "2.1.0"
 structopt = "0.3.21"
 atty = "0.2.14"
 surf-cookie-middleware = "0.2.0"
-env_logger = "0.8.2"
+env_logger = "0.8.3"
 
 [dependencies.bat]
 version = "0.17.1"
@@ -34,6 +34,6 @@ version = "1.9.0"
 features = ["tokio02", "attributes"]
 
 [dependencies.http-client]
-version = "6.2.0"
+version = "6.3.0"
 default-features = false
-features = ["h1_client", "hyper_client", "curl_client"]
+features = ["h1_client", "hyper_client", "curl_client", "rustls"]
