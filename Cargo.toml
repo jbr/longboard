@@ -34,6 +34,6 @@ version = "1.9.0"
 features = ["tokio02", "attributes"]
 
 [dependencies.http-client]
-version = "6.3.5"
+version = "6.4.0"
 default-features = false
 features = ["h1_client", "hyper_client", "curl_client", "rustls"]
