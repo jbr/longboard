@@ -1,6 +1,6 @@
 [package]
 name = "longboard"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["Jacob Rothstein <hi@jbr.me>"]
 edition = "2018"
 description = "the easy way to surf"
