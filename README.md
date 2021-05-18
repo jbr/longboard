@@ -13,7 +13,7 @@ $ cargo install longboard
 ## Usage
 
 ```sh
-longboard 0.0.2
+longboard 0.0.x
 the easy way to surf
 
 USAGE:
