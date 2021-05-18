@@ -1271,9 +1271,9 @@ dependencies = [
 
 [[package]]
 name = "http-client"
-version = "6.3.5"
+version = "6.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5566ecc26bc6b04e773e680d66141fced78e091ad818e420d726c152b05a64ff"
+checksum = "7f232b7a4e96a185acf80225b55224fbd02cc2c9058757ae61e2ab93d3e58a49"
 dependencies = [
  "async-h1",
  "async-std",
@@ -1289,6 +1289,8 @@ dependencies = [
  "hyper-tls",
  "isahc",
  "log",
+ "rustls",
+ "tokio 0.2.25",
 ]
 
 [[package]]
