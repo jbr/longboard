@@ -17,12 +17,12 @@ surf-cookie-middleware = "0.2.0"
 env_logger = "0.8.3"
 
 [dependencies.bat]
-version = "0.17.1"
+version = "0.18.0"
 default-features = false
 features = [
   "atty",
   "clap",
-  "dirs",
+  "dirs-next",
   "lazy_static",
   "paging",
   "wild",
@@ -34,6 +34,6 @@ version = "1.9.0"
 features = ["tokio02", "attributes"]
 
 [dependencies.http-client]
-version = "6.4.0"
+version = "6.3.5"
 default-features = false
 features = ["h1_client", "hyper_client", "curl_client", "rustls"]
