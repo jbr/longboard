@@ -14,7 +14,7 @@ surf = "2.2.0"
 structopt = "0.3.21"
 atty = "0.2.14"
 surf-cookie-middleware = "0.2.0"
-env_logger = "0.8.3"
+env_logger = "0.8.4"
 
 [dependencies.bat]
 version = "0.18.0"
