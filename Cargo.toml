@@ -17,7 +17,7 @@ surf-cookie-middleware = "0.2.0"
 env_logger = "0.8.4"
 
 [dependencies.bat]
-version = "0.18.0"
+version = "0.18.2"
 default-features = false
 features = [
   "atty",
