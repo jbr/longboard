@@ -1288,9 +1288,9 @@ dependencies = [
 
 [[package]]
 name = "http-client"
-version = "6.4.0"
+version = "6.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f232b7a4e96a185acf80225b55224fbd02cc2c9058757ae61e2ab93d3e58a49"
+checksum = "ea880b03c18a7e981d7fb3608b8904a98425d53c440758fcebf7d934aa56547c"
 dependencies = [
  "async-h1",
  "async-std",
