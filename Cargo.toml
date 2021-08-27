@@ -30,7 +30,7 @@ features = [
 ]
 
 [dependencies.async-std]
-version = "1.9.0"
+version = "1.10.0"
 features = ["tokio02", "attributes"]
 
 [dependencies.http-client]
