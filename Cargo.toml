@@ -13,7 +13,7 @@ repository = "https://github.com/jbr/longboard"
 surf = "2.3.1"
 structopt = "0.3.22"
 atty = "0.2.14"
-surf-cookie-middleware = "0.2.0"
+surf-cookie-middleware = "0.3.0"
 env_logger = "0.9.0"
 
 [dependencies.bat]
