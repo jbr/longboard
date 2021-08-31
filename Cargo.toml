@@ -11,7 +11,7 @@ repository = "https://github.com/jbr/longboard"
 
 [dependencies]
 surf = "2.3.1"
-structopt = "0.3.22"
+structopt = "0.3.23"
 atty = "0.2.14"
 surf-cookie-middleware = "0.3.0"
 env_logger = "0.9.0"
